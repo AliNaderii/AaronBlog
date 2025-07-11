@@ -1,0 +1,41 @@
+﻿<script>
+	// ---------- Add Modal ----------
+	const addTagModal = document.getElementById('addTagModal');
+	addTagModal.addEventListener('hidden.bs.modal', function () {
+		const form = addTagModal.querySelector('form');
+		form.reset();
+		const validationErrors = addTagModal.querySelectorAll('.text-danger');
+		validationErrors.forEach(error => error.textContent = '');
+		$(form).find('.input-validation-error').removeClass('input-validation-error');
+	});
+
+	// ---------- Edit Modal ----------
+	const editModal = document.getElementById('editModal');
+	editModal.addEventListener('show.bs.modal', function (event) {
+		const button = event.relatedTarget;
+		const id = button.getAttribute('data-id');
+		const name = button.getAttribute('data-name');
+
+		document.getElementById('edit-id').value = id;
+		document.getElementById('edit-name').value = name;
+	});
+
+	editModal.addEventListener('hidden.bs.modal', function () {
+		const form = editModal.querySelector('form');
+		form.reset();
+		const validationErrors = editModal.querySelectorAll('.text-danger');
+		validationErrors.forEach(error => error.textContent = '');
+		$(form).find('.input-validation-error').removeClass('input-validation-error');
+	});
+
+	// ---------- Delete Modal ----------
+	const deleteModal = document.getElementById('deleteModal');
+	deleteModal.addEventListener('show.bs.modal', function (event) {
+		const button = event.relatedTarget;
+		const id = button.getAttribute('data-id');
+		const name = button.getAttribute('data-name');
+
+		document.getElementById('delete-id').value = id;
+		document.getElementById('delete-name').textContent = name;
+	});
+</script>

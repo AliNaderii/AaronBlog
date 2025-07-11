@@ -1,0 +1,85 @@
+﻿@model Aaron.Models.ViewModels.EditBookViewModel;
+
+@{
+	ViewData["Title"] = "Edit";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
+
+<div class="text-center mb-4">
+	<h2>@Model.Title</h2>
+	<h5 class="text-secondary">نویسنده: @Model.Author</h5>
+</div>
+<hr />
+
+<form enctype="multipart/form-data" asp-action="Edit" method="post">
+	@Html.AntiForgeryToken()
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<input type="hidden" asp-for="Id"/>
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<label asp-for="Title" class="form-label">عنوان کتاب</label>
+			<input asp-for="Title" class="form-control" />
+		</div>
+		<div class="col-md-6">
+			<label asp-for="AuthorId" class="form-label">نویسنده</label>
+			<select asp-for="AuthorId" asp-items="@ViewBag.Authors" class="form-control"></select>
+		</div>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="ImageFile" class="form-label">تصویر</label>
+		<input type="file" asp-for="ImageFile" class="form-control"/>
+		<span class="text-danger" asp-asp-validation-for="ImageFile"></span>
+	</div>
+
+	@if (!string.IsNullOrWhiteSpace(Model.CoverImagePath))
+	{
+		<div class="mb-3">
+			<img src="@Model.CoverImagePath" alt="تصویر فعلی" class="img-thumbnail" style="max-width: 200px;" />
+		</div>
+	}
+
+	<div class="mb-3">
+		<label asp-for="Summary" class="form-label">موضوع</label>
+		<input asp-for="Summary" class="form-control" />
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Description" class="form-label">خلاصه و توضیحات</label>
+		<textarea asp-for="Description" class="form-control" rows="5"></textarea>
+	</div>
+
+	<div class="row mb-4">
+		<div class="col-md-6">
+			<label asp-for="CategoryId" class="form-label">دسته‌بندی</label>
+			<select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-control"></select>
+		</div>
+
+		<div class="col-md-6">
+			<label class="form-label">تگ‌ها</label>
+			<div class="row">
+				@foreach (var tag in ViewBag.Tags)
+				{
+					var isChecked = Model.TagIds.Any(modelTag => modelTag == tag.Id);
+
+					<div class="col-md-6">
+						<div class="form-check d-flex align-items-center gap-1 mb-1">
+							<input @(isChecked ? "checked" : "") class="form-check-input m-0" type="checkbox"
+								   name="selectedTags" value="@tag.Id" id="tag_@tag.Id" />
+							<label class="form-check-label me-1 mb-0" for="tag_@tag.Id">@tag.Name</label>
+						</div>
+					</div>
+
+				}
+			</div>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">بروزرسانی</button>
+</form>
+
+

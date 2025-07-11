@@ -1,0 +1,28 @@
+﻿.admin-wrapper {
+    flex: 1;
+    display: flex;
+}
+
+.sidebar {
+    width: 240px;
+    background-color: #343a40;
+    color: white;
+    min-height: 100vh;
+}
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 12px 16px;
+    }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+.main-content {
+    flex: 1;
+    padding: 24px;
+    background-color: #f8f9fa;
+}

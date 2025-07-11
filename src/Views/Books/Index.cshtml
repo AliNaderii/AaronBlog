@@ -1,0 +1,93 @@
+﻿@model Aaron.Models.ViewModels.PaginatedList<Aaron.Models.Entities.Book>
+@{
+	ViewData["Title"] = "Books";
+}
+
+<div class="container py-5">
+
+	<h2 class="mb-4 text-center">کتاب‌ها</h2>
+
+	<!-- Filter Section -->
+	<form method="get" asp-action="Index" class="row g-3 mb-4">
+		<div class="col-md-4">
+			<label for="category" class="form-label">دسته‌بندی</label>
+			<select id="category" name="selectedCategory" asp-items="ViewBag.Categories" class="form-select">
+				<option value="">@(ViewBag.SelectedCategory ?? "-- همه دسته‌بندی‌ها --")</option>
+			</select>
+		</div>
+
+		<div class="col-md-4">
+			<label for="tag" class="form-label">برچسب</label>
+			<select id="tag" name="selectedTag" asp-items="ViewBag.Tags" class="form-select">
+				<option value="">-- همه برچسب‌ها --</option>
+			</select>
+		</div>
+
+		<div class="col-md-4">
+			<label for="searchTerm" class="form-label">جستجو</label>
+			<input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control" placeholder="جستجو...">
+		</div>
+
+		<!-- Buttons Row -->
+		<div class="col-md-12 d-flex justify-content-end gap-2">
+			<button type="submit" class="btn btn-dark">فیلتر</button>
+			<a asp-action="Index" class="btn btn-outline-secondary">پاک‌کردن فیلترها</a>
+		</div>
+	</form>
+
+	<!-- Book Grid -->
+	<div class="row">
+		@foreach (var book in Model)
+		{
+			<div class="col-md-4 mb-4">
+				<div class="card h-100 shadow-sm">
+					<img src="@book.CoverImagePath"
+					class="card-img-top img-fluid object-fit-cover"
+					style="height: 300px;"
+					alt="@book.Title">
+					<div class="card-body d-flex flex-column">
+						<h5 class="card-title">@book.Title</h5>
+						<p class="mb-1 text-muted">نویسنده: @book.Author.Name</p>
+						<p class="card-text text-truncate">@book.Summary</p>
+						<a asp-action="Details"
+						asp-controller="Books"
+						asp-route-slug="@book.Slug"
+						class="mt-auto btn btn-dark">
+							مشاهده جزئیات
+						</a>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+
+	<!-- Pagination -->
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">
+			@if (Model.HasPrevPage)
+			{
+				<!-- Previous button -->
+				<li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)">قبلی</a>
+				</li>
+			}
+
+			<!-- Page numbers -->
+			@for (int i = 1; i <= Model.TotalPages; i++)
+			{
+				<li class="page-item @(i == Model.PageNumber ? "active" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+				</li>
+			}
+
+			@if (Model.HasNextPage)
+			{
+				<!-- Next button -->
+				<li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber + 1)">بعدی</a>
+				</li>
+			}
+		</ul>
+	</nav>
+
+</div>

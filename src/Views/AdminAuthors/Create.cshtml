@@ -1,0 +1,43 @@
+﻿@model Aaron.Models.ViewModels.CreateAuthorViewModel;
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<form asp-controller="AdminAuthors" asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Name" class="form-label">نام نویسنده</label>
+                <input asp-for="Name" type="text" class="form-control" />
+                <span class="text-danger" asp-validation-for="Name"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="ImageFile" class="form-label" id="ImageFile">تصویر</label>
+        <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png" />
+        <div class="form-text text-muted">
+            حجم فایل نباید بیشتر از ۱ مگابایت باشد. فرمت‌های مجاز: JPG, PNG, JPEG
+        </div>
+        <span class="text-danger" asp-validation-for="ImageFile"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">توضیحات</label>
+        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">ارسال</button>
+</form>
+
+
+

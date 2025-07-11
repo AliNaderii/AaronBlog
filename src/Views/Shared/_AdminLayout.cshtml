@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Aaron</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="icon" type="image/png" href="~/favicon-32x32.png">
+	<link rel="stylesheet" href="~/css/AdminLayout.css" />
+	<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+	<div class="admin-wrapper">
+		<nav class="sidebar d-flex flex-column">
+			<h4 class="text-center mt-3 mb-4"><i data-lucide="layout-dashboard"></i> داشبورد</h4>
+			<a asp-controller="AdminDashboard" asp-action="Index"><i data-lucide="home"></i> همه کتاب‌ها</a>
+			<a asp-controller="AdminDashboard" asp-action="Create"><i data-lucide="plus"></i> افزودن کتاب جدید</a>
+			<a asp-controller="AdminAuthors" asp-action="Index"><i data-lucide="pen"></i> مدیریت نویسندگان</a>
+			<a asp-controller="AdminCategory" asp-action="Index"><i data-lucide="folder-kanban"></i> مدیریت دسته‌بندی‌ها</a>
+			<a a asp-controller="AdminTags" asp-action="Index"><i data-lucide="tags"></i> مدیریت برچسب‌ها</a>
+			<a asp-controller="AdminAccount" asp-action="ChangeUsername"><i data-lucide="user"></i> تغییر نام کاربری</a>
+			<a asp-controller="AdminAccount" asp-action="ChangePassword"><i data-lucide="settings"></i> تغییر رمز عبور</a>
+			<hr class="bg-light mx-2" />
+			<form method="post" asp-controller="AdminAccount" asp-action="Logout" class="m-2">
+				@Html.AntiForgeryToken()
+				<button type="submit" class="btn btn-outline-light w-100">خروج</button>
+			</form>
+		</nav>
+
+		<main class="main-content">
+			@RenderBody()
+		</main>
+	</div>
+
+	<script>
+		lucide.createIcons();
+	</script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@RenderSection("Scripts", required: false)
+</body>
+</html>

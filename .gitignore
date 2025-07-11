@@ -1,0 +1,52 @@
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build results
+bin/
+obj/
+[Aa][Rr][Mm]/
+bld/
+[Bb]uild/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+## Visual Studio
+.vs/
+.vscode/
+
+## NuGet
+packages/
+*.nupkg
+*.snupkg
+
+## LibMan
+wwwroot/lib/
+
+## ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+## Logs and DB
+*.log
+*.bak
+*.dbmdl
+*.mdf
+*.ldf
+
+## Local settings
+appsettings.Development.json
+secrets.json
+local.settings.json
+
+## Docker
+**/*.pid
+
+## Test results
+TestResults/

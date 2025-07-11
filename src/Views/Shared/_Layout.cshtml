@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Aaron</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="icon" type="image/png" href="~/favicon-32x32.png">
+	<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg bg-white border-bottom">
+			<div class="container d-flex justify-content-between align-items-center">
+
+				<div class="d-flex align-items-center gap-4">
+					<a class="navbar-brand fw-bold mb-0 h1" asp-controller="Home" asp-action="Index">
+						<img src="~/images/aaron.png" height="100" />
+					</a>
+					<ul class="navbar-nav flex-row gap-3">
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-controller="Books" asp-action="Index">تازه‌ها</a>
+						</li>
+
+						@await Component.InvokeAsync("CategoryMenu")
+
+						@await Component.InvokeAsync("AuthorMenu")
+
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-controller="Home" asp-action="AboutAaron">درباره آرون</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-controller="Home" asp-action="About">درباره ما</a>
+						</li>
+					</ul>
+				</div>
+
+				<form asp-controller="Books" asp-action="Index" method="get"
+					  class="d-none d-lg-flex" role="search" style="max-width: 300px; width: 100%;">
+					<input class="form-control me-2"
+						   name="searchTerm"
+						   type="search"
+						   placeholder="جست‌وجوی کتاب، نویسنده و ..."
+						   aria-label="Search">
+					<button class="btn btn-outline-dark" type="submit">برو</button>
+				</form>
+
+			</div>
+		</nav>
+	</header>
+
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<!-- Footer -->
+	<footer class="bg-white border-top py-4">
+		<div class="container d-flex justify-content-center align-items-center">
+			<p class="text-center m-0 fw-bold">مطالب این وب‌سایت بدون محدودیت در دسترس همه‌ست؛ باوری ریشه‌دار در آزادی دانش و گردش آزاد اطلاعات، برای گسترش فرهنگ دانایی همگانی.</p>
+		</div>
+	</footer>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script>
+		lucide.createIcons();
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

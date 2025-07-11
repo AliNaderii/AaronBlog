@@ -1,0 +1,90 @@
+﻿@model Aaron.Models.Entities.Author
+
+@{
+	ViewData["Title"] = Model.Name;
+}
+
+<!-- فاصله از بالا -->
+<div class="pt-4"></div>
+
+<!-- تصویر نویسنده -->
+<div class="w-100 overflow-hidden" style="max-height: 500px;">
+	<img src="@Model.CoverImagePath"
+		 class="img-fluid w-100 object-fit-cover"
+		 style="object-fit: cover; height: 100%; max-height: 500px;"
+		 alt="@Model.Name" />
+</div>
+
+<!-- محتوای اصلی -->
+<div class="container py-5">
+
+	<!-- مشخصات نویسنده -->
+	<div class="row justify-content-center">
+		<div class="col-lg-10">
+			<h1 class="mb-3 text-center">@Model.Name</h1>
+
+			<!-- توضیحات کوتاه -->
+			<div id="shortDescription" class="collapse show">
+				<div class="d-inline">
+					<span style="white-space: pre-line;">
+						@Model.Description.Substring(0, Math.Min(1000, Model.Description.Length))...
+					</span>
+					<a href="#shortDescription" class="ms-2" data-bs-toggle="collapse" role="button"
+					   aria-expanded="true" data-bs-target="#shortDescription,#fullDescription">
+						نمایش بیشتر
+					</a>
+				</div>
+			</div>
+
+			<!-- توضیحات کامل -->
+			<div id="fullDescription" class="collapse">
+				<div class="d-inline">
+					<p style="white-space: pre-line;">@Model.Description</p>
+					<a href="#fullDescription" class="ms-2" data-bs-toggle="collapse" role="button"
+					   aria-expanded="false" data-bs-target="#shortDescription,#fullDescription">
+						نمایش کمتر
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- لیست کتاب‌ها -->
+	<div class="row justify-content-center mt-5">
+		<div class="col-lg-10">
+			<h4 class="mb-3">لیست کتاب‌ها</h4>
+			<hr />
+
+			@if (!Model.Books.Any())
+			{
+				<p style="white-space: pre-line;">هنوز کتابی برای این نویسنده ثبت نشده است.</p>
+			}
+			else
+			{
+				<div class="row">
+					@foreach (var book in Model.Books)
+					{
+						<div class="col-md-4 mb-4">
+							<div class="card h-100 shadow-sm">
+								<img src="@book.CoverImagePath"
+									 class="card-img-top img-fluid object-fit-cover"
+									 style="height: 300px;"
+									 alt="@book.Title">
+								<div class="card-body d-flex flex-column">
+									<h5 class="card-title">@book.Title</h5>
+									<p class="mb-1 text-muted">نویسنده: @Model.Name</p>
+									<a asp-action="Details"
+									   asp-controller="Books"
+									   asp-route-slug="@book.Slug"
+									   class="mt-auto btn btn-dark">
+										مشاهده جزئیات
+									</a>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</div>
+</div>

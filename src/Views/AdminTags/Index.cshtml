@@ -1,0 +1,155 @@
+﻿@model Aaron.Models.ViewModels.TagViewModel;
+
+@{
+	ViewData["Title"] = "دسته بندی ها";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	@await Html.PartialAsync("~/Views/AdminTags/Partials/_TagsModalScripts.cshtml")
+}
+
+
+<div class="container d-flex flex-column align-items-center mt-5" style="max-width: 75%;">
+	<h1 class="mb-4">دسته بندی ها</h1>
+
+	<div class="w-100 d-flex justify-content-end mb-3">
+		<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTagModal">
+			<i data-lucide="plus"></i> افزودن دسته بندی جدید
+		</button>
+	</div>
+
+	<table class="table table-bordered table-striped text-center">
+		<thead class="table-dark">
+			<tr>
+				<th>نام</th>
+				<th>عملیات</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tag in Model.Tags)
+			{
+				<tr>
+					<td>@tag.Name</td>
+					<td>
+						<button type="button"
+								class="btn btn-info btn-sm me-2"
+								data-bs-toggle="modal"
+								data-bs-target="#editModal"
+								data-id="@tag.Id"
+								data-name="@tag.Name">
+							<i data-lucide="edit"></i> ویرایش
+						</button>
+
+						<button type="button"
+								class="btn btn-danger btn-sm"
+								data-bs-toggle="modal"
+								data-bs-target="#deleteModal"
+								data-id="@tag.Id"
+								data-name="@tag.Name">
+							<i data-lucide="trash"></i> حذف
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation example">
+	<ul class="pagination justify-content-center">
+		@if (Model.Tags.HasPrevPage)
+		{
+			<!-- Previous button -->
+			<li class="page-item @(Model.Tags.PageNumber == 1 ? "disabled" : "")">
+				<a class="page-link" asp-action="Index" asp-route-page="@(Model.Tags.PageNumber - 1)">قبلی</a>
+			</li>
+		}
+
+		<!-- Page numbers -->
+		@for (int i = 1; i <= Model.Tags.TotalPages; i++)
+		{
+			<li class="page-item @(i == Model.Tags.PageNumber ? "active" : "")">
+				<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+			</li>
+		}
+
+		@if (Model.Tags.HasNextPage)
+		{
+			<!-- Next button -->
+			<li class="page-item @(Model.Tags.PageNumber == Model.Tags.TotalPages ? "disabled" : "")">
+				<a class="page-link" asp-action="Index" asp-route-page="@(Model.Tags.PageNumber + 1)">بعدی</a>
+			</li>
+		}
+	</ul>
+</nav>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addTagModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<form asp-action="Create" method="post" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">افزودن دسته بندی جدید</h5>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label asp-for="NewTag.Name" class="form-label"></label>
+					<input asp-for="NewTag.Name" class="form-control" />
+					<span asp-validation-for="NewTag.Name" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary">ذخیره</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<form asp-action="Edit" method="post" class="modal-content">
+			<input type="hidden" id="edit-id" asp-for="NewTag.Id" />
+			<div class="modal-header">
+				<h5 class="modal-title">ویرایش دسته بندی</h5>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label asp-for="NewTag.Name" class="form-label"></label>
+					<input id="edit-name" asp-for="NewTag.Name" class="form-control" />
+					<span asp-validation-for="NewTag.Name" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-info">ذخیره تغییرات</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<form asp-action="Delete" method="post" class="modal-content">
+			<input type="hidden" id="delete-id" asp-for="@Model.NewTag.Id" />
+			<div class="modal-header">
+				<h5 class="modal-title">حذف دسته بندی</h5>
+			</div>
+			<div class="modal-body">
+				<p>آیا مطمئن هستید که می‌خواهید دسته بندی "<strong id="delete-name"></strong>" را حذف کنید؟</p>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-danger">حذف</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+

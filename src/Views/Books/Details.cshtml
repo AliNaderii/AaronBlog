@@ -1,0 +1,58 @@
+﻿@model Aaron.Models.Entities.Book;
+
+@{
+    ViewData["Title"] = Model.Slug;
+}
+
+<!-- Top Padding to Push Below Navbar -->
+<div class="pt-4"></div>
+
+<!-- Hero Image (Responsive and Cropped) -->
+<div class="w-100 overflow-hidden" style="max-height: 500px;">
+    <img src="@Model.CoverImagePath"
+         class="img-fluid w-100 object-fit-cover"
+         style="object-fit: cover; height: 100%; max-height: 500px;"
+         alt="@Model.Title" />
+</div>
+
+<!-- Book Details -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <h1 class="mb-3 text-center">@Model.Title</h1>
+            <h5 class="text-muted text-center mb-4">نویسنده: @Model.Author.Name</h5>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Summary))
+            {
+                <p class="lead text-center">@Model.Summary</p>
+            }
+
+            <hr />
+
+            <h4 class="mb-3">توضیحات</h4>
+            <p style="white-space: pre-line;">@Model.Description</p>
+
+            <hr />
+
+            <p>
+                <strong>دسته‌بندی:</strong>
+                <span class="badge bg-info text-dark">@Model.Category?.Name</span>
+            </p>
+
+            <p>
+                <strong>برچسب‌ها:</strong>
+                @foreach (var tag in Model.Tags)
+                {
+                    <span class="badge bg-secondary me-1">@tag.Name</span>
+                }
+            </p>
+
+            <a asp-action="Index" class="btn btn-outline-dark mt-4">بازگشت به لیست کتاب‌ها</a>
+
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,78 @@
+﻿@model Aaron.Models.ViewModels.CreateBookViewModel;
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
+
+<form asp-controller="AdminBooks" asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">عنوان</label>
+                <input asp-for="Title" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <label asp-for="AuthorId" class="form-label">نویسنده</label>
+                <select asp-for="AuthorId" asp-items="ViewBag.Authors" class="form-select"></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageFile" class="form-label" id="ImageFile">تصویر</label>
+        <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png" />
+        <div class="form-text text-muted">
+            حجم فایل نباید بیشتر از ۱ مگابایت باشد. فرمت‌های مجاز: JPG, PNG, JPEG
+        </div>
+        <span class="text-danger" asp-validation-for="ImageFile"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="Summary" class="form-label">موضوع</label>
+        <input asp-for="Summary" type="text" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">توضیحات</label>
+        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label asp-for="CategoryId" class="form-label">دسته‌بندی</label>
+            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">تگ‌ها</label>
+            <div class="row">
+                @foreach (var tag in ViewBag.Tags)
+                {
+                    <div class="col-md-6">
+                        <div class="form-check d-flex align-items-center gap-1 mb-1">
+                            <input class="form-check-input m-0" type="checkbox" name="selectedTags" value="@tag.Id" id="tag_@tag.Id" />
+                            <label class="form-check-label me-1 mb-0" for="tag_@tag.Id" style="margin-right: 0.4rem;">
+                                @tag.Name
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">ارسال</button>
+</form>
+
+
+

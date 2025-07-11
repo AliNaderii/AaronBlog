@@ -1,0 +1,35 @@
+﻿@model Aaron.Models.ViewModels.ChangeUsernameViewModel;
+
+@{
+    ViewData["Title"] = "تغییر نام کاربری";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<h2 class="mb-4">تغییر نام کاربری</h2>
+
+<form asp-action="ChangeUsername" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="CurrentUsername" class="form-label"></label>
+        <input asp-for="CurrentUsername" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewUsername" class="form-label"></label>
+        <input asp-for="NewUsername" class="form-control" />
+        <span asp-validation-for="NewUsername" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+</form>
