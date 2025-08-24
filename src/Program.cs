@@ -34,13 +34,6 @@ namespace Aaron
                 AuthorsInitializer.Seed(db);
                 CategoriesAndTagsInitializer.Seed(db);
                 BooksInitializer.Seed(db);
-            }
-
-            // Seed Admin
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.Migrate();
                 AdminInitializer.SeedAdmin(db);
             }
 

@@ -1,0 +1,25 @@
+﻿<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		new TomSelect("#SelectedTags", {
+			plugins: ['remove_button'],
+			maxItems: 10,
+			placeholder: "برچسب‌ها را انتخاب کنید",
+			allowEmptyOption: true
+		});
+
+		new TomSelect("#CategoryId", {
+			plugins: ['remove_button'],
+			maxItems: 1,
+			placeholder: "دسته‌بندی را انتخاب کنید",
+			allowEmptyOption: true
+		});
+
+		new TomSelect("#AuthorId", {
+			plugins: ['remove_button'],
+			maxItems: 1,
+			placeholder: "نویسنده را انتخاب کنید",
+			allowEmptyOption: true
+		});
+	});
+</script>

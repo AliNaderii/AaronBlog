@@ -18,6 +18,13 @@ namespace Aaron.Controllers
             _context = context;
         }
 
+        private async Task LoadViewBagsAsync()
+        {
+            ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
+            ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
+            ViewBag.Tags = new SelectList(await _context.Tags.ToListAsync(), "Id", "Name");
+        }
+
         public async Task<IActionResult> Index(string? searchTerm, int? selectedCategory, int? selectedTag, int page)
         {
             var bookQuery = _context.Books
@@ -52,78 +59,80 @@ namespace Aaron.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-            ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-            ViewBag.Tags = await _context.Tags.ToListAsync();
+            await LoadViewBagsAsync();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookViewModel model, List<int> selectedTags)
+        public async Task<IActionResult> Create(CreateBookViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var tags = await _context.Tags.Where(t => selectedTags.Contains(t.Id)).ToListAsync();
+                await LoadViewBagsAsync();
+                return View(model);
+            }
 
-                if (model.ImageFile != null && model.ImageFile.Length > 0)
+            var tags = await _context.Tags.Where(t => model.SelectedTags.Contains(t.Id)).ToListAsync();
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                // Check for uploaded file format
+                var fileExtension = Path.GetExtension(model.ImageFile.FileName);
+                var validExtensions = new[] { ".jpeg", ".jpg", ".png" };
+
+                if (!model.ImageFile.ContentType.StartsWith("image/") || !validExtensions.Contains(fileExtension))
                 {
-                    // Check for uploaded file format
-                    var fileExtension = Path.GetExtension(model.ImageFile.FileName);
-                    var validExtensions = new[] { ".jpeg", ".jpg", ".png" };
+                    ModelState.AddModelError("ImageFile", "فقط فایل های تصویری مجاز هستند");
+                    await LoadViewBagsAsync();
+                    return View(model);
+                }
 
-                    if (!model.ImageFile.ContentType.StartsWith("image/") || !validExtensions.Contains(fileExtension))
-                    {
-                        ModelState.AddModelError("ImageFile", "فقط فایل های تصویری مجاز هستند");
-                        ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-                        ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-                        ViewBag.Tags = await _context.Tags.ToListAsync();
-                        return View(model);
-                    }
+                // Check for uploaded file size
+                const long maxFileSize = 1 * 1024 * 1024; // 1MB
 
-                    // Check for uploaded file size
-                    const long maxFileSize = 1 * 1024 * 1024; // 1MB
+                if (model.ImageFile.Length > maxFileSize)
+                {
+                    ModelState.AddModelError("ImageFile", "حجم فایل نباید بیشتر از ۱ مگابایت باشد.");
+                    await LoadViewBagsAsync();
+                    return View(model);
+                }
 
-                    if (model.ImageFile.Length > maxFileSize)
-                    {
-                        ModelState.AddModelError("ImageFile", "حجم فایل نباید بیشتر از ۱ مگابایت باشد.");
-                        ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-                        ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-                        ViewBag.Tags = await _context.Tags.ToListAsync();
-                        return View(model);
-                    }
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books", fileName);
 
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books", fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    try
                     {
                         await model.ImageFile.CopyToAsync(stream);
                     }
-
-                    var book = new Book()
+                    catch (Exception ex)
                     {
-                        Title = model.Title,
-                        AuthorId = model.AuthorId,
-                        Slug = new Book().GenerateSlug(model.Title),
-                        Summary = model.Summary,
-                        Description = model.Description,
-                        CoverImagePath = "/images/books" + fileName,
-                        CategoryId = model.CategoryId,
-                        Tags = tags
-                    };
-
-                    await _context.AddAsync(book);
-                    await _context.SaveChangesAsync();
+                        Console.WriteLine($"خطا در ذخیره فایل یا ذخیره کتاب: {ex.Message}");
+                        ModelState.AddModelError("ImageFile", "در هنگام ذخیره اطلاعات مشکلی پیش آمد.");
+                        await LoadViewBagsAsync();
+                        return View(model);
+                    }
                 }
 
-                return RedirectToAction(nameof(Index));
+                var book = new Book()
+                {
+                    Title = model.Title,
+                    AuthorId = model.AuthorId,
+                    Slug = new Book().GenerateSlug(model.Title),
+                    Summary = model.Summary,
+                    Description = model.Description,
+                    CoverImagePath = "/images/books" + fileName,
+                    CategoryId = model.CategoryId,
+                    Tags = tags
+                };
+
+                await _context.AddAsync(book);
+                await _context.SaveChangesAsync();
             }
 
-            ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-            ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-            ViewBag.Tags = await _context.Tags.ToListAsync();
-            return View(model);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Details(string slug)

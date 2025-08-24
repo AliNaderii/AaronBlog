@@ -4,19 +4,27 @@ namespace Aaron.Models.ViewModels
 {
     public class CreateBookViewModel
     {
-        [MaxLength(200)]
-        [Required]
+        [MaxLength(200, ErrorMessage ="عنوان نمی‌تواند از 200 کاراکتر بیشتر باشد")]
+        [Required(ErrorMessage="عنوان نمی‌تواند خالی باشد")]
         public string Title { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "خلاصه کتاب نمی‌تواند خالی باشد")]
         public string Summary { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "توضیحات کتاب نمی‌تواند خالی باشد")]
         public string Description { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "عکس کتاب نمی‌تواند خالی باشد")]
         public IFormFile ImageFile { get; set; } = default!;
-        [Required]
+
+        [Required(ErrorMessage = "نویسنده کتاب نمی‌تواند خالی باشد")]
         public int AuthorId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "دسته‌بندی کتاب نمی‌تواند خالی باشد")]
         public int CategoryId { get; set; }
+
+        [Required(ErrorMessage = "برچسب نمی‌تواند خالی باشد")]
+        public List<int> SelectedTags { get; set; } = new();
     }
 
 }
