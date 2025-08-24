@@ -123,7 +123,7 @@ namespace Aaron.Controllers
                     Slug = new Book().GenerateSlug(model.Title),
                     Summary = model.Summary,
                     Description = model.Description,
-                    CoverImagePath = "/images/books" + fileName,
+                    CoverImagePath = "/images/books/" + fileName,
                     CategoryId = model.CategoryId,
                     Tags = tags
                 };
@@ -158,6 +158,7 @@ namespace Aaron.Controllers
             var book = await _context.Books.
                 Include(b => b.Author).
                 Include(b => b.Tags).
+                Include(b => b.Category).
                 FirstOrDefaultAsync(b => b.Id == id);
 
             if (book is null)
@@ -172,20 +173,18 @@ namespace Aaron.Controllers
                 Summary = book.Summary,
                 Description = book.Description,
                 CoverImagePath = book.CoverImagePath,
+                Category = book.Category.Name,
                 CategoryId = book.CategoryId,
-                TagIds = book.Tags.Select(t => t.Id).ToList(),
             };
 
-            ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-            ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-            ViewBag.Tags = await _context.Tags.ToListAsync();
+            await LoadViewBagsAsync();
 
             return View(bookViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditBookViewModel model, List<int> selectedTags)
+        public async Task<IActionResult> Edit(EditBookViewModel model)
         {
             var existingBook = await _context.Books
                 .Include(b => b.Tags)
@@ -196,9 +195,7 @@ namespace Aaron.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-                ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-                ViewBag.Tags = await _context.Tags.ToListAsync();
+                await LoadViewBagsAsync();
                 return View(model);
             }
 
@@ -210,7 +207,7 @@ namespace Aaron.Controllers
             existingBook.CategoryId = model.CategoryId;
 
             existingBook.Tags.Clear();
-            var tags = await _context.Tags.Where(t => selectedTags.Contains(t.Id)).ToListAsync();
+            var tags = await _context.Tags.Where(t => model.SelectedTags.Contains(t.Id)).ToListAsync();
             foreach (var t in tags)
             {
                 existingBook.Tags.Add(t);
@@ -223,11 +220,8 @@ namespace Aaron.Controllers
                 if (!model.ImageFile.ContentType.StartsWith("image/") || !validExtensions.Contains(fileExtension))
                 {
                     ModelState.AddModelError("ImageFile", "فقط فایل های تصویری مجاز هستند");
-                    ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-                    ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-                    ViewBag.Tags = await _context.Tags.ToListAsync();
+                    await LoadViewBagsAsync();
                     model.CoverImagePath = existingBook.CoverImagePath;
-                    model.TagIds = selectedTags;
                     return View(model);
                 }
 
@@ -236,11 +230,8 @@ namespace Aaron.Controllers
                 if (model.ImageFile.Length > maxImageSize)
                 {
                     ModelState.AddModelError("ImageFile", "حجم فایل نباید بیشتر از ۱ مگابایت باشد.");
-                    ViewBag.Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name");
-                    ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name");
-                    ViewBag.Tags = await _context.Tags.ToListAsync();
+                    await LoadViewBagsAsync();
                     model.CoverImagePath = existingBook.CoverImagePath;
-                    model.TagIds = selectedTags;
                     return View(model);
                 }
 
@@ -261,13 +252,23 @@ namespace Aaron.Controllers
 
                 using (var stream = new FileStream(newFilePath, FileMode.Create))
                 {
-                    await model.ImageFile.CopyToAsync(stream);
+                    try
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"خطا در ذخیره فایل یا ذخیره کتاب: {ex.Message}");
+                        ModelState.AddModelError("ImageFile", "در هنگام ذخیره اطلاعات مشکلی پیش آمد.");
+                        await LoadViewBagsAsync();
+                        return View(model);
+                    }
                 }
 
-                existingBook.CoverImagePath = "/images/books" + newFileName;
+                existingBook.CoverImagePath = "/images/books/" + newFileName;
             }
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             return RedirectToAction("Index", "AdminDashboard");
         }
 

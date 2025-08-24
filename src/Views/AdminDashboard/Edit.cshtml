@@ -7,6 +7,7 @@
 
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
+<partial name="~/Views/AdminDashboard/Partials/_TomSelectScripts.cshtml" />
 }
 
 <div class="text-center mb-4">
@@ -17,23 +18,27 @@
 
 <form enctype="multipart/form-data" asp-action="Edit" method="post">
 	@Html.AntiForgeryToken()
-	<div asp-validation-summary="All" class="text-danger"></div>
+
 	<input type="hidden" asp-for="Id"/>
 	<div class="row mb-3">
 		<div class="col-md-6">
 			<label asp-for="Title" class="form-label">عنوان کتاب</label>
-			<input asp-for="Title" class="form-control" />
+			<input asp-for="Title" class="form-control" value="@Model.Title" placeholder="عنوان کتاب را بنویسید" />
+			<span class="text-danger" asp-validation-for="Title"></span>
 		</div>
 		<div class="col-md-6">
 			<label asp-for="AuthorId" class="form-label">نویسنده</label>
-			<select asp-for="AuthorId" asp-items="@ViewBag.Authors" class="form-control"></select>
+			<select asp-for="AuthorId" asp-items="ViewBag.Authors" class="form-select" multiple>
+				<option value="@Model.Author"></option>
+			</select>
+			<span class="text-danger" asp-validation-for="AuthorId"></span>
 		</div>
 	</div>
 
 	<div class="mb-3">
 		<label asp-for="ImageFile" class="form-label">تصویر</label>
 		<input type="file" asp-for="ImageFile" class="form-control"/>
-		<span class="text-danger" asp-asp-validation-for="ImageFile"></span>
+		<span class="text-danger" asp-validation-for="ImageFile"></span>
 	</div>
 
 	@if (!string.IsNullOrWhiteSpace(Model.CoverImagePath))
@@ -45,37 +50,29 @@
 
 	<div class="mb-3">
 		<label asp-for="Summary" class="form-label">موضوع</label>
-		<input asp-for="Summary" class="form-control" />
+		<input asp-for="Summary" type="text" class="form-control" value="@Model.Summary" placeholder="خلاصه‌ای کوتاه از کتاب ..." />
+		<span class="text-danger" asp-validation-for="Summary"></span>
 	</div>
 
 	<div class="mb-3">
-		<label asp-for="Description" class="form-label">خلاصه و توضیحات</label>
-		<textarea asp-for="Description" class="form-control" rows="5"></textarea>
+		<label asp-for="Description" class="form-label">توضیحات</label>
+		<textarea asp-for="Description" class="form-control" rows="5">@Model.Description</textarea>
+		<span class="text-danger" asp-validation-for="Description"></span>
 	</div>
 
 	<div class="row mb-4">
 		<div class="col-md-6">
 			<label asp-for="CategoryId" class="form-label">دسته‌بندی</label>
-			<select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-control"></select>
+			<select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select" multiple>
+				<option value="@Model.Category"></option>
+			</select>
+			<span class="text-danger" asp-validation-for="CategoryId"></span>
 		</div>
 
 		<div class="col-md-6">
-			<label class="form-label">تگ‌ها</label>
-			<div class="row">
-				@foreach (var tag in ViewBag.Tags)
-				{
-					var isChecked = Model.TagIds.Any(modelTag => modelTag == tag.Id);
-
-					<div class="col-md-6">
-						<div class="form-check d-flex align-items-center gap-1 mb-1">
-							<input @(isChecked ? "checked" : "") class="form-check-input m-0" type="checkbox"
-								   name="selectedTags" value="@tag.Id" id="tag_@tag.Id" />
-							<label class="form-check-label me-1 mb-0" for="tag_@tag.Id">@tag.Name</label>
-						</div>
-					</div>
-
-				}
-			</div>
+			<label asp-for="SelectedTags" class="form-label">برچسب‌ها</label>
+			<select asp-for="SelectedTags" asp-items="ViewBag.Tags" class="form-select" multiple></select>
+			<span class="text-danger" asp-validation-for="SelectedTags"></span>
 		</div>
 	</div>
 
