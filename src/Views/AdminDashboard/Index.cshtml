@@ -5,6 +5,10 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section Scripts {
+	<partial name="~/Views/AdminDashboard/Partials/_DeleteModalScripts.cshtml"/>
+}
+
 <div class="container mt-5">
 
 	<!-- Header -->
@@ -120,17 +124,6 @@
 					<button type="submit" class="btn btn-danger">بله، حذف شود</button>
 				</form>
 			</div>
-
 		</div>
 	</div>
 </div>
-
-<script>
-	function showDeleteModal(bookId) {
-		const form = document.getElementById("deleteForm");
-		form.action = `delete?id=${bookId}`;
-		const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
-		modal.show();
-	}
-</script>
-

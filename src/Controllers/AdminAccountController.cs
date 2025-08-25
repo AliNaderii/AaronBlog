@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aaron.Controllers
 {
+    [Route("admin/account/[action]")]
     public class AdminAccountController : Controller
     {
         private readonly AppDbContext _context;
@@ -16,13 +17,13 @@ namespace Aaron.Controllers
             _context = context;
         }
 
-        [HttpGet("/admin/login")]
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        [HttpPost("/admin/login")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(AdminViewModel model)
         {
@@ -61,7 +62,7 @@ namespace Aaron.Controllers
             return RedirectToAction("login", "AdminAccount");
         }
 
-        [HttpGet("/admin/change-username")]
+        [HttpGet]
         [Authorize(AuthenticationSchemes = "AdminAuth", Roles = "Admin")]
         public IActionResult ChangeUsername()
         {
@@ -69,7 +70,7 @@ namespace Aaron.Controllers
             return View(model);
         }
 
-        [HttpPost("/admin/change-username")]
+        [HttpPost]
         [Authorize(AuthenticationSchemes = "AdminAuth", Roles = "Admin")]
         public async Task<IActionResult> ChangeUsername(ChangeUsernameViewModel model)
         {
@@ -103,14 +104,14 @@ namespace Aaron.Controllers
             return RedirectToAction("Index", "AdminDashboard");
         }
 
-        [HttpGet("/admin/change-password")]
+        [HttpGet]
         [Authorize(AuthenticationSchemes = "AdminAuth", Roles = "Admin")]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
-        [HttpPost("/admin/change-password")]
+        [HttpPost]
         [Authorize(AuthenticationSchemes = "AdminAuth", Roles = "Admin")]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {

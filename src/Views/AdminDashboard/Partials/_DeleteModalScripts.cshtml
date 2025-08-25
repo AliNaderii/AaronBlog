@@ -1,0 +1,8 @@
+﻿<script>
+	function showDeleteModal(bookId) {
+		const form = document.getElementById("deleteForm");
+		form.action = `delete?id=${bookId}`;
+		const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
+		modal.show();
+	}
+</script>

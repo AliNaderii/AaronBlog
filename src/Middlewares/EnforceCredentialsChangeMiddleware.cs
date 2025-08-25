@@ -17,9 +17,9 @@
                 if(isDefualtClaim != null && bool.TryParse(isDefualtClaim.Value, out var isDefualt) && isDefualt )
                 {
                     var path = context.Request.Path.Value?.ToLower();
-                    if (!path.StartsWith("/admin/change-password"))
+                    if (!path.StartsWith("/admin/account/changepassword"))
                     {
-                        context.Response.Redirect("/admin/change-password");
+                        context.Response.Redirect("/admin/account/changepassword");
                         return;
                     }
                 }

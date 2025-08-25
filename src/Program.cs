@@ -19,9 +19,9 @@ namespace Aaron
             builder.Services.AddAuthentication("AdminAuth")
                 .AddCookie("AdminAuth", options =>
                 {
-                    options.LoginPath = "/admin/login";
-                    options.LogoutPath = "/admin/logout";
-                    options.AccessDeniedPath = "/admin/access-denied";
+                    options.LoginPath = "/admin/account/login";
+                    options.LogoutPath = "/admin/account/logout";
+                    options.AccessDeniedPath = "/admin/account/access-denied";
                 });
 
             var app = builder.Build();
