@@ -277,14 +277,23 @@ namespace Aaron.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var book = await _context.Books.
-                Include(b => b.Tags).
-                Include(b => b.Category).
-                Where(b => b.Id == id).
-                FirstOrDefaultAsync();
+                FindAsync(id);
+
             if (book is null)
             {
                 return NotFound();
             }
+
+            var imagePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                book.CoverImagePath.TrimStart('/'));
+
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+            
             _context.Remove(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
