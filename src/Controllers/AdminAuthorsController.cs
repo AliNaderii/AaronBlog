@@ -86,7 +86,7 @@ namespace Aaron.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+            var author = await _context.Authors.FindAsync(id);
 
             if (author is null)
                 return NotFound();
@@ -104,9 +104,9 @@ namespace Aaron.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditAuthorViewModel model, List<int> selectedTags)
+        public async Task<IActionResult> Edit(EditAuthorViewModel model)
         {
-            var existingAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Id == model.Id);
+            var existingAuthor = await _context.Authors.FindAsync(model.Id);
 
             if (existingAuthor is null)
                 return NotFound();
@@ -156,7 +156,16 @@ namespace Aaron.Controllers
 
                 using (var stream = new FileStream(newFilePath, FileMode.Create))
                 {
-                    await model.ImageFile.CopyToAsync(stream);
+                    try
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"خطا در ذخیره فایل یا ذخیره کتاب: {ex.Message}");
+                        ModelState.AddModelError("ImageFile", "در هنگام ذخیره اطلاعات مشکلی پیش آمد.");
+                        return View(model);
+                    }
                 }
 
                 existingAuthor.CoverImagePath = "/images/authors/" + newFileName;
@@ -178,15 +187,26 @@ namespace Aaron.Controllers
             return View(author);
         }
 
-        public async Task<IActionResult> Delete (int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
-            var author = await _context.Authors
-                .Where(a => a.Id == id)
-                .FirstOrDefaultAsync();
+            var author = await _context.Authors.FindAsync(id);
 
             if (author is null)
             {
                 return NotFound();
+            }
+
+            var imagePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                author.CoverImagePath.TrimStart('/')
+                );
+
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
             }
 
             _context.Remove(author);

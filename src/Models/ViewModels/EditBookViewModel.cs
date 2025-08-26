@@ -29,8 +29,8 @@ namespace Aaron.Models.ViewModels
         public string CoverImagePath { get; set; } = string.Empty;
 
         public IFormFile? ImageFile { get; set; }
-        [Required(ErrorMessage = "برچسب نمی‌تواند خالی باشد")]
 
+        [Required(ErrorMessage = "برچسب نمی‌تواند خالی باشد")]
         public List<int> SelectedTags { get; set; } = new();
     }
 }

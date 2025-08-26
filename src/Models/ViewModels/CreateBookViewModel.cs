@@ -12,6 +12,7 @@ namespace Aaron.Models.ViewModels
         public string Summary { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "توضیحات کتاب نمی‌تواند خالی باشد")]
+        [MinLength(50, ErrorMessage = "حداقل کاراکتر برای قسمت توضیحات 50 است")]
         public string Description { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "عکس کتاب نمی‌تواند خالی باشد")]

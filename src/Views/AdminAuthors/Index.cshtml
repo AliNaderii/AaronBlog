@@ -5,6 +5,10 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+@section Scripts {
+	<partial name="_DeleteModalScriptsPartial"/>
+}
+
 
 <div class="container d-flex flex-column align-items-center mt-5" style="max-width: 75%;">
 	<h1 class="mb-4">نویسندگان</h1>
@@ -68,12 +72,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	function showDeleteModal(authorId) {
-		const form = document.getElementById("deleteForm");
-		form.action = `delete?id=${authorId}`;
-		const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
-		modal.show();
-	}
-</script>
