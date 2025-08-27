@@ -23,6 +23,11 @@ namespace Aaron.Data
                 .HasOne(b => b.Author)
                 .WithMany(a => a.Books)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Book>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.Books)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Book> Books { get; set; }
