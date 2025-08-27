@@ -1,13 +1,13 @@
 ﻿@model Aaron.Models.ViewModels.CategoryViewModel;
 
 @{
-	ViewData["Title"] = "دسته بندی ها";
+	ViewData["Title"] = "Categories";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
-	@await Html.PartialAsync("~/Views/AdminCategory/Partials/_CategoryModalScripts.cshtml")
+	<partial name="_OperationsModalScriptsPartial" />
 }
 
 
@@ -15,7 +15,7 @@
 	<h1 class="mb-4">دسته بندی ها</h1>
 
 	<div class="w-100 d-flex justify-content-end mb-3">
-		<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+		<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
 			<i data-lucide="plus"></i> افزودن دسته بندی جدید
 		</button>
 	</div>
@@ -87,7 +87,7 @@
 </nav>
 
 <!-- Add Modal -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog">
 		<form asp-action="Create" method="post" class="modal-content">
 			<div class="modal-header">

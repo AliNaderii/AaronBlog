@@ -1,10 +1,10 @@
 ﻿<script>
 	// ---------- Add Modal ----------
-	const addCategoryModal = document.getElementById('addCategoryModal');
-	addCategoryModal.addEventListener('hidden.bs.modal', function () {
-		const form = addCategoryModal.querySelector('form');
+	const addModal = document.getElementById('addModal');
+	addModal.addEventListener('hidden.bs.modal', function () {
+		const form = addModal.querySelector('form');
 		form.reset();
-		const validationErrors = addCategoryModal.querySelectorAll('.text-danger');
+		const validationErrors = addModal.querySelectorAll('.text-danger');
 		validationErrors.forEach(error => error.textContent = '');
 		$(form).find('.input-validation-error').removeClass('input-validation-error');
 	});

@@ -1,13 +1,13 @@
 ﻿@model Aaron.Models.ViewModels.TagViewModel;
 
 @{
-	ViewData["Title"] = "دسته بندی ها";
+	ViewData["Title"] = "Tags";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
-	@await Html.PartialAsync("~/Views/AdminTags/Partials/_TagsModalScripts.cshtml")
+	<partial name="_OperationsModalScriptsPartial" />
 }
 
 
@@ -15,7 +15,7 @@
 	<h1 class="mb-4">دسته بندی ها</h1>
 
 	<div class="w-100 d-flex justify-content-end mb-3">
-		<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTagModal">
+		<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
 			<i data-lucide="plus"></i> افزودن دسته بندی جدید
 		</button>
 	</div>
@@ -87,15 +87,15 @@
 </nav>
 
 <!-- Add Modal -->
-<div class="modal fade" id="addTagModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog">
 		<form asp-action="Create" method="post" class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">افزودن دسته بندی جدید</h5>
+				<h5 class="modal-title">افزودن برچسب جدید</h5>
 			</div>
 			<div class="modal-body">
 				<div class="mb-3">
-					<label asp-for="NewTag.Name" class="form-label"></label>
+					<label asp-for="NewTag.Name" class="form-label">نام برچسب جدید</label>
 					<input asp-for="NewTag.Name" class="form-control" />
 					<span asp-validation-for="NewTag.Name" class="text-danger"></span>
 				</div>
@@ -115,7 +115,7 @@
 		<form asp-action="Edit" method="post" class="modal-content">
 			<input type="hidden" id="edit-id" asp-for="NewTag.Id" />
 			<div class="modal-header">
-				<h5 class="modal-title">ویرایش دسته بندی</h5>
+				<h5 class="modal-title">ویرایش برچسب</h5>
 			</div>
 			<div class="modal-body">
 				<div class="mb-3">
@@ -139,10 +139,10 @@
 		<form asp-action="Delete" method="post" class="modal-content">
 			<input type="hidden" id="delete-id" asp-for="@Model.NewTag.Id" />
 			<div class="modal-header">
-				<h5 class="modal-title">حذف دسته بندی</h5>
+				<h5 class="modal-title">حذف برچسب</h5>
 			</div>
 			<div class="modal-body">
-				<p>آیا مطمئن هستید که می‌خواهید دسته بندی "<strong id="delete-name"></strong>" را حذف کنید؟</p>
+				<p>آیا مطمئن هستید که می‌خواهید برچسب "<strong id="delete-name"></strong>" را حذف کنید؟</p>
 			</div>
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-danger">حذف</button>

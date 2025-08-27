@@ -211,7 +211,7 @@ namespace Aaron.Controllers
 
             _context.Remove(author);
             await _context.SaveChangesAsync();
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\AdminCategory\Partials\" />
+    <Folder Include="Views\AdminTags\Partials\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\images\authors\" />
     <Folder Include="wwwroot\images\books\" />
